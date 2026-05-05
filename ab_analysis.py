@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """
-cdr_analysis.py — Analyse antibody CDR sequences from a FASTA file.
+ab_analysis.py — Analyse antibody sequences from a FASTA file.
+
+Author:     Scott Presnell <srp@presnellgroup.net>
+Date:       2026-05-04
+Version:    0.9.0
+License:    MIT
 
 Usage:
-    python cdr_analysis.py sequences.fasta
-    python cdr_analysis.py sequences.fasta --scheme kabat
-    python cdr_analysis.py sequences.fasta --scheme imgt --tsv
+    python ab_analysis.py sequences.fasta
+    python ab_analysis.py --scheme kabat sequences.fasta 
+    python ab_analysis.py --scheme imgt --csv sequences.fasta 
 
 Requirements:
     conda install -c bioconda abnumber
@@ -129,11 +134,11 @@ def print_csv(results, scheme):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Analyse antibody CDR sequences from a FASTA file.",
+        description="Analyse antibody sequences from a FASTA file.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__,
+        epilog="Author: Scott Presnell <srp@presnellgroup.net>"
     )
-    parser.add_argument("fasta", help="Input FASTA file")
+    parser.add_argument("input_file", help="Input FASTA file")
     parser.add_argument(
         "--scheme",
         default="imgt",
@@ -149,12 +154,12 @@ def main():
 
     # Parse and analyse
     try:
-        records = list(parse_fasta(args.fasta))
+        records = list(parse_fasta(args.input_file))
     except FileNotFoundError:
-        sys.exit(f"ERROR: File not found: {args.fasta}")
+        sys.exit(f"ERROR: File not found: {args.input_file}")
 
     if not records:
-        sys.exit(f"ERROR: No sequences found in {args.fasta}")
+        sys.exit(f"ERROR: No sequences found in {args.input_file}")
 
     results = []
     for name, seq in records:
